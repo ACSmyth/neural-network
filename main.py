@@ -109,9 +109,11 @@ class GeneticAlgorithm:
 	# input_func: game state -> neural network input array
 	# run_game_func: agent1, agent2, input_func -> final game state
 	# fitness_func: final game state -> two element list of fitness of both agents
-	def __init__(self, dimensions, population_size, input_func, run_game_func, fitness_func):
+	def __init__(self, dimensions, population_size, num_opponents, rounds_per_opponent, input_func, run_game_func, fitness_func):
 		self.dimensions = dimensions
 		self.population_size = population_size
+		self.num_opponents = num_opponents
+		self.rounds_per_opponent = rounds_per_opponent
 		self.input_func = input_func
 		self.run_game_func = run_game_func
 		self.fitness_func = fitness_func
@@ -130,10 +132,7 @@ class GeneticAlgorithm:
 		for agent in self.population:
 			agent[1], agent[2] = 0, 0
 
-		num_opponents = 5
-		rounds_per_opponent = 2
-
-		best_agents = self.population[:num_opponents]
+		best_agents = self.population[:self.num_opponents]
 		cloned_best_agents = [[agent[0].deep_clone(), agent[1], agent[2]] for agent in best_agents]
 
 		for agent in self.population:
@@ -146,7 +145,7 @@ class GeneticAlgorithm:
 				if net is opponent_net: continue
 				avg_net_fitness = 0
 				avg_opponent_fitness = 0
-				for i in range(rounds_per_opponent):
+				for i in range(self.rounds_per_opponent):
 					final_game_state = self.run_game_func(net, opponent_net, self.input_func)
 					net_fitness, opponent_fitness = self.fitness_func(final_game_state)
 					avg_net_fitness += net_fitness
@@ -158,8 +157,8 @@ class GeneticAlgorithm:
 					old_avg = ag[1]
 					old_n = ag[2]
 
-					ag[2] += rounds_per_opponent
-					ag[1] = ((old_avg * old_n) + (next_avg * rounds_per_opponent)) / ag[2]
+					ag[2] += self.rounds_per_opponent
+					ag[1] = ((old_avg * old_n) + (next_avg * self.rounds_per_opponent)) / ag[2]
 
 				update_agent_fitness(agent, avg_net_fitness)
 				update_agent_fitness(opponent_agent, avg_opponent_fitness)
@@ -175,7 +174,7 @@ class GeneticAlgorithm:
 			return int(4 * (-math.log(-random.random() + 1) + 0.1))
 
 		new_population = []
-		for i in range(len(self.population) - num_opponents):
+		for i in range(len(self.population) - self.num_opponents):
 			i1 = ran_idx()
 			i2 = ran_idx()
 			if i1 >= len(self.population):
