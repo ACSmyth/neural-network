@@ -116,6 +116,7 @@ class GeneticAlgorithm:
 		self.run_game_func = run_game_func
 		self.fitness_func = fitness_func
 		self.gen_count = 0
+		self.prev_gen = None
 		self.population = []
 		self.best_agent = None
 
@@ -178,6 +179,7 @@ class GeneticAlgorithm:
 		# add best agents from prev generation unmutated
 		new_population.extend(cloned_best_agents)
 
+		#self.prev_gen = [[ag[0].deep_clone(), ag[1], ag[2]] for ag in self.population]
 		self.population.clear()
 		self.population.extend(new_population)
 
@@ -185,6 +187,9 @@ class GeneticAlgorithm:
 
 	def get_best_agent(self):
 		return self.best_agent
+
+	#def get_prev_gen(self):
+		#return self.prev_gen
 
 
 class AdversarialGeneticAlgorithm:
