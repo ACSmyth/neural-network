@@ -83,9 +83,7 @@ class NeuralNetwork:
 				cur_neuron.val = sigmoid(cur_neuron.val)
 		return self.layers[len(self.layers)-1].neurons
 
-	def back_propagate_queue_weight_changes(self, correct_output):
-		learning_rate = 0.1
-
+	def back_propagate_queue_weight_changes(self, correct_output, learning_rate = 0.1):
 		def back_propagate_layer(layer, prev_layer, errors):
 			prev_neuron_errors = [0 for q in range(len(prev_layer.neurons))]
 			for i in range(len(layer.neurons)):
