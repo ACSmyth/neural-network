@@ -7,6 +7,8 @@ def sigmoid(x):
 	if x > 10**10: return 1
 	return 1 / (1 + math.e**(-x))
 
+def relu(x):
+	return max(0, x)
 
 class Neuron:
 	def __init__(self, num_weights):
@@ -22,15 +24,16 @@ class Neuron:
 		self.val = 0.0
 
 	def queue_weight_changes(self, i, change):
-		self.queue_weight_changes[i] = ((self.queue_weight_changes[i] * self.num_trials[i]) + change)\
+		self.queued_weight_changes[i] = ((self.queued_weight_changes[i] * self.num_trials[i]) + change)\
 										/ (self.num_trials[i] + 1)
 		self.num_trials[i] += 1
 
 	def make_weight_changes(self):
+		#print(self.queued_weight_changes)
 		for q in range(len(self.weights)):
 			self.weights[q] += self.queued_weight_changes[q]
-		self.queued_weight_changes = [0 for q in range(num_weights)]
-		self.num_trials = [0 for q in range(num_weights)]
+		self.queued_weight_changes = [0 for q in range(len(self.weights))]
+		self.num_trials = [0 for q in range(len(self.weights))]
 
 
 class Layer:
@@ -81,7 +84,7 @@ class NeuralNetwork:
 		return self.layers[len(self.layers)-1].neurons
 
 	def back_propagate_queue_weight_changes(self, correct_output):
-		learning_rate = 0.05
+		learning_rate = 0.1
 
 		def back_propagate_layer(layer, prev_layer, errors):
 			prev_neuron_errors = [0 for q in range(len(prev_layer.neurons))]
@@ -90,15 +93,19 @@ class NeuralNetwork:
 				error = errors[i]
 				for z in range(len(prev_layer.neurons)):
 					prev_neuron = prev_layer.neurons[z]
-					change = error * prev_neuron.val
+					change = learning_rate * error * prev_neuron.val
+					#print('change: ' + str(change))
+					#print('error: ' + str(error))
+					#print('prevneuronval: ' + str(prev_neuron.val))
 					prev_neuron.queue_weight_changes(i, change)
 					prev_neuron_errors[z] += change
 			prev_neuron_errors = [val / len(layer.neurons) for val in prev_neuron_errors]
 			return prev_neuron_errors
 
-		new_errors = [correct_output[q] - self.layers[len(layers-1)].neurons[q].val for q in range(len(correct_output))]
+		new_errors = [correct_output[q] - self.layers[len(self.layers)-1].neurons[q].val\
+						for q in range(len(correct_output))]
 		for i in range(len(self.layers)-1, 0, -1):
-			print(i)
+			#print(new_errors)
 			new_errors = back_propagate_layer(self.layers[i], self.layers[i-1], new_errors)
 
 
