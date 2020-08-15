@@ -1,6 +1,7 @@
 import random
 import math
 
+
 def sigmoid(x):
 	if x < 10**-10: return 0
 	if x > 10**10: return 1
@@ -11,6 +12,8 @@ class Neuron:
 	def __init__(self, num_weights):
 		self.val = 0.0
 		self.weights = [((0.8 * random.random()) - 0.4) for q in range(num_weights)]
+		self.queued_weight_changes = [0 for q in range(num_weights)]
+		self.num_trials = [0 for q in range(num_weights)]
 
 	def set_val(self, inp):
 		self.val = inp
@@ -18,10 +21,25 @@ class Neuron:
 	def clear(self):
 		self.val = 0.0
 
+	def queue_weight_changes(self, i, change):
+		self.queue_weight_changes[i] = ((self.queue_weight_changes[i] * self.num_trials[i]) + change)\
+										/ (self.num_trials[i] + 1)
+		self.num_trials[i] += 1
+
+	def make_weight_changes(self):
+		for q in range(len(self.weights)):
+			self.weights[q] += self.queued_weight_changes[q]
+		self.queued_weight_changes = [0 for q in range(num_weights)]
+		self.num_trials = [0 for q in range(num_weights)]
+
 
 class Layer:
 	def __init__(self, num_neurons, next_layer_num_neurons):
 		self.neurons = [Neuron(next_layer_num_neurons) for q in range(num_neurons)]
+
+	def make_weight_changes(self):
+		for n in self.neurons:
+			n.make_weight_changes()
 
 
 class NeuralNetwork:
@@ -62,6 +80,34 @@ class NeuralNetwork:
 				cur_neuron.val = sigmoid(cur_neuron.val)
 		return self.layers[len(self.layers)-1].neurons
 
+	def back_propagate_queue_weight_changes(self, correct_output):
+		learning_rate = 0.05
+
+		def back_propagate_layer(layer, prev_layer, errors):
+			prev_neuron_errors = [0 for q in range(len(prev_layer.neurons))]
+			for i in range(len(layer.neurons)):
+				neuron = layer.neurons[i]
+				error = errors[i]
+				for z in range(len(prev_layer.neurons)):
+					prev_neuron = prev_layer.neurons[z]
+					change = error * prev_neuron.val
+					prev_neuron.queue_weight_changes(i, change)
+					prev_neuron_errors[z] += change
+			prev_neuron_errors = [val / len(layer.neurons) for val in prev_neuron_errors]
+			return prev_neuron_errors
+
+		new_errors = [correct_output[q] - self.layers[len(layers-1)].neurons[q].val for q in range(len(correct_output))]
+		for i in range(len(self.layers)-1, 0, -1):
+			print(i)
+			new_errors = back_propagate_layer(self.layers[i], self.layers[i-1], new_errors)
+
+
+	# update weights after backpropagating
+	def make_weight_changes(self):
+		for l in self.layers:
+			l.make_weight_changes()
+
+
 	def merge(self, other_net):
 		def merge_layers(l1, l2, ret_layer):
 			for i in range(len(l1.neurons)):
@@ -72,7 +118,6 @@ class NeuralNetwork:
 						ret_layer.neurons[i].weights[j] = l1.neurons[i].weights[j]
 					else:
 						ret_layer.neurons[i].weights[j] = l2.neurons[i].weights[j]
-
 
 		ret = NeuralNetwork(self.dimensions)
 		# choose randomly from one or another
