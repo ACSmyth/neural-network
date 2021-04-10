@@ -134,7 +134,7 @@ class NeuralNetwork:
 
 		ret = NeuralNetwork(self.dimensions)
 		# choose randomly from one or another
-		# OR, to make more similar to crossover, could have "streaks" where if one
+		# or could have "streaks" where if one
 		# side randomly is selected then the next 5-10 nodes are from it
 		for i in range(len(self.layers)):
 			merge_layers(self.layers[i], other_net.layers[i], ret.layers[i])
