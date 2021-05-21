@@ -1,6 +1,6 @@
 import random
 import math
-
+ 
 
 def sigmoid(x):
 	if x < -10**9: return 0
