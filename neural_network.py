@@ -1,5 +1,6 @@
+import random
 from .layer import Layer
-from activation_functions import sigmoid, sigmoid_deriv
+from .activation_functions import sigmoid, sigmoid_deriv
 
 class NeuralNetwork:
   # dimensions is a list of ints
