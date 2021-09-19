@@ -1,9 +1,9 @@
 from .layer import Layer
-
+from activation_functions import sigmoid, sigmoid_deriv
 
 class NeuralNetwork:
   # dimensions is a list of ints
-  def __init__(self, dimensions, activation_function, activation_function_deriv):
+  def __init__(self, dimensions, activation_function=sigmoid, activation_function_deriv=sigmoid_deriv):
     self.dimensions = dimensions
     self.layers = []
     for i in range(len(dimensions)):
