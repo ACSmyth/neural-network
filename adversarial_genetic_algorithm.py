@@ -1,3 +1,5 @@
+import math
+import random
 from .neural_network import NeuralNetwork
 
 
