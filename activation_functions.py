@@ -1,3 +1,6 @@
+import math
+
+
 def sigmoid(x):
 	if x < -10**9: return 0
 	if x > 10**9: return 1

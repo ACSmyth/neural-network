@@ -1,3 +1,6 @@
+from .neural_network import NeuralNetwork
+
+
 class AdversarialGeneticAlgorithm:
 	# dimensions: list of ints
 	# population_size: int

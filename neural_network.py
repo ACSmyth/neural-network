@@ -1,4 +1,5 @@
-from layer import Layer
+from . import Layer
+
 
 class NeuralNetwork:
   # dimensions is a list of ints
