@@ -1,4 +1,4 @@
-from . import Layer
+from .layer import Layer
 
 
 class NeuralNetwork:
