@@ -37,7 +37,7 @@ class NeuralNetwork:
         cur_neuron = cur_layer.neurons[i]
         for prev_neuron in prev_layer.neurons:
           cur_neuron.val += prev_neuron.val * prev_neuron.weights[i]
-        cur_neuron.val = activation_function(cur_neuron.val)
+        cur_neuron.val = self.activation_function(cur_neuron.val)
     return self.layers[len(self.layers)-1].neurons
 
   def back_propagate_queue_weight_changes(self, correct_output, learning_rate = 0.05):
@@ -48,7 +48,7 @@ class NeuralNetwork:
         error = errors[i]
         for z in range(len(prev_layer.neurons)):
           prev_neuron = prev_layer.neurons[z]
-          change = 2 * learning_rate * error * activation_function_deriv(neuron.val) * prev_neuron.val
+          change = 2 * learning_rate * error * self.activation_function_deriv(neuron.val) * prev_neuron.val
           prev_neuron.queue_weight_changes(i, change)
           prev_neuron_errors[z] += (change / learning_rate) * prev_neuron.weights[i]
       return prev_neuron_errors

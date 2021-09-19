@@ -1,3 +1,6 @@
+import random
+
+
 class Neuron:
 	def __init__(self, num_weights):
 		self.val = 0.0
