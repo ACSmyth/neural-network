@@ -1,6 +1,6 @@
 import math
 import random
-from .neural_network import NeuralNetwork
+from neural_network import NeuralNetwork
 
 
 class AdversarialGeneticAlgorithm:
@@ -24,7 +24,7 @@ class AdversarialGeneticAlgorithm:
 	def run_generation(self):
 		if self.gen_count == 0:
 			# generate initial population pool
-			for i in range(self.population_size):
+			for _ in range(self.population_size):
 				# [net, avg fitness, num trials]
 				self.population.append([NeuralNetwork(self.dimensions), 0, 0])
 
@@ -50,8 +50,8 @@ class AdversarialGeneticAlgorithm:
 					net_fitness, opponent_fitness = self.fitness_func(final_game_state)
 					avg_net_fitness += net_fitness
 					avg_opponent_fitness += opponent_fitness
-				avg_net_fitness /= rounds_per_opponent
-				avg_opponent_fitness /= rounds_per_opponent
+				avg_net_fitness /= self.rounds_per_opponent
+				avg_opponent_fitness /= self.rounds_per_opponent
 
 				def update_agent_fitness(ag, next_avg):
 					old_avg = ag[1]
@@ -72,7 +72,7 @@ class AdversarialGeneticAlgorithm:
 			return int(4 * (-math.log(-random.random() + 1) + 0.1))
 
 		new_population = []
-		for i in range(len(self.population) - self.num_opponents):
+		for _ in range(len(self.population) - self.num_opponents):
 			i1 = ran_idx()
 			i2 = ran_idx()
 			if i1 >= len(self.population):
