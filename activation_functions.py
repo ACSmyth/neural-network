@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 def sigmoid(x):
@@ -10,7 +11,7 @@ def sigmoid_deriv(x):
 	return x * (1 - x)
 
 def relu(x):
-	return max(0, x)
+	return np.maximum(x, 0)
 
 def relu_deriv(x):
 	return 0 if x < 0 else 1
