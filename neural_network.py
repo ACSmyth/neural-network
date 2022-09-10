@@ -1,6 +1,7 @@
 from .layer import Layer
 from .activation_functions import relu, relu_deriv
 
+
 class NeuralNetwork:
   # dimensions is a list of ints
   def __init__(self, dimensions, activation_function=relu, activation_function_deriv=relu_deriv):

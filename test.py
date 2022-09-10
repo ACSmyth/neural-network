@@ -3,6 +3,7 @@ import numpy as np
 from neural_network import NeuralNetwork
 from hypothesis import given, strategies as st
 
+
 class Tests(unittest.TestCase):
   @given(st.integers(min_value=0, max_value=10**5))
   def test_neural_network_multiplies(self, n):
