@@ -24,6 +24,16 @@ class NeuralNetwork:
       self.layers[i+1].set_neuron_values(output)
     return output.tolist()
   
+  def merge(self, other_nn):
+    self_cloned = self.deep_clone()
+    for i in range(len(self_cloned.layers)):
+      self_cloned.layers[i].merge(other_nn.layers[i])
+    return self_cloned
+  
+  def mutate(self):
+    for layer in self.layers:
+      layer.mutate()
+
   def deep_clone(self):
     nn_clone = NeuralNetwork(
       self.dimensions,
