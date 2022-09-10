@@ -1,6 +1,6 @@
 import math
 import random
-from neural_network import NeuralNetwork
+from .neural_network import NeuralNetwork
 
 
 class AdversarialGeneticAlgorithm:

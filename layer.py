@@ -1,12 +1,11 @@
 import numpy as np
-from activation_functions import relu, relu_deriv
+from .activation_functions import relu, relu_deriv
 
 
 class Layer:
 	def __init__(self, num_neurons, next_layer_num_neurons, activation_function=relu, activation_function_deriv=relu_deriv):
 		self.num_neurons = num_neurons
 		self.next_layer_neurons = next_layer_num_neurons
-
 		self.neuron_matrix = np.zeros((num_neurons, 1))
 		self.weights_matrix = np.random.rand(num_neurons, next_layer_num_neurons)
 		self.biases_matrix = np.random.rand(next_layer_num_neurons)

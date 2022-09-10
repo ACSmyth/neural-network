@@ -1,5 +1,5 @@
-from layer import Layer
-from activation_functions import relu, relu_deriv
+from .layer import Layer
+from .activation_functions import relu, relu_deriv
 
 class NeuralNetwork:
   # dimensions is a list of ints
