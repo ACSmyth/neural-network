@@ -22,7 +22,7 @@ class NeuralNetwork:
     for i in range(len(self.layers)-1):
       output = self.layers[i].forward_propagate()
       self.layers[i+1].set_neuron_values(output)
-    return output
+    return output.tolist()
   
   def deep_clone(self):
     nn_clone = NeuralNetwork(
