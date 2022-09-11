@@ -1,5 +1,5 @@
 from .layer import Layer
-from .activation_functions import relu, relu_deriv
+from .activation_functions import relu, relu_deriv, sigmoid
 
 
 class NeuralNetwork:
@@ -22,7 +22,10 @@ class NeuralNetwork:
     for i in range(len(self.layers)-1):
       output = self.layers[i].forward_propagate()
       self.layers[i+1].set_neuron_values(output)
-    return output.tolist()
+    
+    # Norm only the last layer to [0,1] using sigmoid
+    self.layers[len(self.layers)-1].set_neuron_values(sigmoid(self.layers[len(self.layers)-1].neuron_matrix))
+    return self.layers[len(self.layers)-1].neuron_matrix.tolist()
   
   def merge(self, other_nn):
     self_cloned = self.deep_clone()
@@ -43,3 +46,6 @@ class NeuralNetwork:
     layer_clones = [layer.deep_clone() for layer in self.layers]
     nn_clone.layers = layer_clones
     return nn_clone
+  
+  def __repr__(self):
+    return str(id(self)) + '\n' + ''.join(f'\t{var.title()}: {getattr(self, var)}\n' for var in vars(self))

@@ -45,7 +45,7 @@ class AdversarialGeneticAlgorithm:
 				if net is opponent_net: continue
 				avg_net_fitness = 0
 				avg_opponent_fitness = 0
-				for i in range(self.rounds_per_opponent):
+				for _ in range(self.rounds_per_opponent):
 					final_game_state = self.run_game_func(net, opponent_net, self.input_func)
 					net_fitness, opponent_fitness = self.fitness_func(final_game_state)
 					avg_net_fitness += net_fitness
@@ -66,6 +66,7 @@ class AdversarialGeneticAlgorithm:
 		# select / merge
 		self.population.sort(key=lambda p: p[1], reverse=True) # sort by fitness, descending order
 		self.best_agent = self.population[0]
+
 
 		# randomly pick from pop -> best more likely
 		def ran_idx():

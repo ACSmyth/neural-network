@@ -5,7 +5,7 @@ import numpy as np
 def sigmoid(x):
 	if x < -10**9: return 0
 	if x > 10**9: return 1
-	return 1 / (1 + math.e**(-x))
+	return 1 / (1 + math.e**(-20*x))
 
 def sigmoid_deriv(x):
 	return x * (1 - x)
