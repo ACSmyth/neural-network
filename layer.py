@@ -8,8 +8,8 @@ class Layer:
 		self.num_neurons = num_neurons
 		self.next_layer_neurons = next_layer_num_neurons
 		self.neuron_matrix = np.zeros((num_neurons, 1))
-		self.weights_matrix = np.random.rand(num_neurons, next_layer_num_neurons) / 10
-		self.biases_matrix = np.random.rand(next_layer_num_neurons) / 10
+		self.weights_matrix = (np.random.rand(num_neurons, next_layer_num_neurons) - 0.5) / 10
+		self.biases_matrix = (np.random.rand(next_layer_num_neurons) - 0.5) / 10
 		self.activation_function = activation_function
 		self.activation_function_deriv = activation_function_deriv
 
@@ -37,8 +37,8 @@ class Layer:
 		return self_cloned
 	
 	def mutate(self):
-		weights_mutation_matrix = (np.random.rand(*self.weights_matrix.shape) - 0.5) / (2.5 * 5)
-		biases_mutation_matrix = (np.random.rand(len(self.biases_matrix)) - 0.5) / (2.5 * 5)
+		weights_mutation_matrix = (np.random.rand(*self.weights_matrix.shape) - 0.5) / (5)
+		biases_mutation_matrix = (np.random.rand(len(self.biases_matrix)) - 0.5) / (5)
 
 		self.weights_matrix = np.add(self.weights_matrix, weights_mutation_matrix)
 		self.biases_matrix = np.add(self.biases_matrix, biases_mutation_matrix)

@@ -1,5 +1,9 @@
+import json
 import math
+import os
+import pickle
 import random
+import time
 from .neural_network import NeuralNetwork
 
 
@@ -9,7 +13,8 @@ class AdversarialGeneticAlgorithm:
 	# input_func: game state -> neural network input array
 	# run_game_func: agent1, agent2, input_func -> final game state
 	# fitness_func: final game state -> two element list of fitness of both agents
-	def __init__(self, dimensions, population_size, num_opponents, rounds_per_opponent, input_func, run_game_func, fitness_func):
+	def __init__(self, dimensions, population_size, num_opponents, rounds_per_opponent,
+							 input_func, run_game_func, fitness_func, save_agents=False):
 		self.dimensions = dimensions
 		self.population_size = population_size
 		self.num_opponents = num_opponents
@@ -20,6 +25,8 @@ class AdversarialGeneticAlgorithm:
 		self.gen_count = 0
 		self.population = []
 		self.best_agent = None
+		self.save_agents = save_agents
+		self.start_time = int(time.time())
 
 	def run_generation(self):
 		if self.gen_count == 0:
@@ -36,6 +43,7 @@ class AdversarialGeneticAlgorithm:
 		cloned_best_agents = [[agent[0].deep_clone(), agent[1], agent[2]] for agent in best_agents]
 
 		for agent in self.population:
+			print(f'\t{self.population.index(agent)+1}/{len(self.population)}')
 			net = agent[0]
 			# run the process / evaluate fitness
 			# everyone plays vs the top agents in the pool, except self
@@ -59,7 +67,6 @@ class AdversarialGeneticAlgorithm:
 
 					ag[2] += self.rounds_per_opponent
 					ag[1] = ((old_avg * old_n) + (next_avg * self.rounds_per_opponent)) / ag[2]
-
 				update_agent_fitness(agent, avg_net_fitness)
 				update_agent_fitness(opponent_agent, avg_opponent_fitness)
 
@@ -67,6 +74,12 @@ class AdversarialGeneticAlgorithm:
 		self.population.sort(key=lambda p: p[1], reverse=True) # sort by fitness, descending order
 		self.best_agent = self.population[0]
 
+		# Save best agent to disk
+		if not os.path.exists('agents/'):
+			os.mkdir('agents/')
+
+		with open(f'agents/{self.start_time}_{self.gen_count}', 'wb') as file:
+			pickle.dump(self.best_agent[0], file)
 
 		# randomly pick from pop -> best more likely
 		def ran_idx():
